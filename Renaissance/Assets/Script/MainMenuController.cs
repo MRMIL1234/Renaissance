@@ -9,7 +9,6 @@ public class MainMenuController : MonoBehaviour
 
     void Start()
     {
-        creditsPanel.SetActive(false);
         settingsPanel.SetActive(false);
     }
 
