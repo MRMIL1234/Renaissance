@@ -1,20 +1,21 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
 
 public class MainMenuController : MonoBehaviour
 {
-    [Header("Credits")]
+    [Header("Panels")]
     public GameObject creditsPanel;
+    public GameObject settingsPanel;
+
+    void Start()
+    {
+        creditsPanel.SetActive(false);
+        settingsPanel.SetActive(false);
+    }
 
     public void OnPlayClicked()
     {
         SceneManager.LoadScene("Game");
-    }
-
-    public void OnOptionsClicked()
-    {
-        Debug.Log("Options - поки що не реалізовано");
     }
 
     public void OnCreditsClicked()
@@ -22,9 +23,19 @@ public class MainMenuController : MonoBehaviour
         creditsPanel.SetActive(true);
     }
 
+    public void OnSettingsClicked()
+    {
+        settingsPanel.SetActive(true);
+    }
+
     public void OnCloseCreditsClicked()
     {
         creditsPanel.SetActive(false);
+    }
+
+    public void OnCloseSettingsClicked()
+    {
+        settingsPanel.SetActive(false);
     }
 
     public void OnQuitClicked()
