@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8510281631200590482}
   - component: {fileID: 5088314451179225487}
   - component: {fileID: 1619331914161378623}
-  - component: {fileID: -6564371195557960906}
+  - component: {fileID: -7977561039821381726}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -120,7 +120,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &-6564371195557960906
+--- !u!114 &-7977561039821381726
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,11 +132,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52d2a876e2f86264390abb9462950f97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaypointFollower2D
-  waypoints:
-  - {fileID: 8509370561335243308, guid: 6dea239960e89c34b969ebb8a8e696fe, type: 3}
-  - {fileID: 1435902047826397837, guid: 086f4a53a0a90da46acdf5ef8051711c, type: 3}
-  - {fileID: 4682290357533018970, guid: 10be2929150db834e8f3430cbdf0f60b, type: 3}
-  - {fileID: 4306639089549060725, guid: 864c6dbc7ae81c24aace170f4bfb7a2e, type: 3}
-  - {fileID: 7072664079795147791, guid: 927971ea43790e249b3d4dbcfa13c07b, type: 3}
   speed: 1
   arrivalDistance: 0.1
