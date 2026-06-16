@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PathContainer : MonoBehaviour
 {
-    public Transform[] points;
+    private Transform[] points;
 
     private void OnEnable()
     {
