@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5088314451179225487}
   - component: {fileID: 7602278206401534951}
   - component: {fileID: 6262446515103543362}
-  - component: {fileID: -7977561039821381726}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -167,17 +166,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &-7977561039821381726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2591656196304521163}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52d2a876e2f86264390abb9462950f97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WaypointFollower2D
-  speed: 1
-  arrivalDistance: 0.1
