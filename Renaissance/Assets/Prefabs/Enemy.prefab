@@ -179,5 +179,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52d2a876e2f86264390abb9462950f97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaypointFollower2D
-  speed: 3
-  arrivalDistance: 0.1
+  _speed: 3
+  _arrivalDistance: 0.1

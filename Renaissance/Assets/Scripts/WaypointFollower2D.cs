@@ -3,12 +3,12 @@ using UnityEngine;
 public class WaypointFollower2D : MonoBehaviour
 {
     [Header("Налаштування руху")]
-    [SerializeField] private float speed = 3f;
-    [SerializeField] private float arrivalDistance = 0.1f;
+    [SerializeField] private float _speed = 3f;
+    [SerializeField] private float _arrivalDistance = 0.1f;
 
-    private Transform[] waypoints;
-    private int currentWaypointIndex = 0;
-    private bool hasReachedEnd = false;
+    private Transform[] _waypoints;
+    private int _currentWaypointIndex = 0;
+    private bool _hasReachedEnd = false;
 
     void Start()
     {
@@ -17,44 +17,39 @@ public class WaypointFollower2D : MonoBehaviour
 
         if (pathObject != null)
         {
-            // 2. Рахуємо скільки всього точок всередині нього лежить
-            int childCount = pathObject.transform.childCount;
-
-            if (childCount > 0)
-            {
-                waypoints = new Transform[childCount];
-
-                for (int i = 0; i < childCount; i++)
-                {
-                    waypoints[i] = pathObject.transform.GetChild(i);
-                }
-            }
+            Debug.Log($"[Інформація] Ворог {gameObject.name} знайшов RoadPath: {pathObject.name}");
+        }
+        else
+        {
+            Debug.LogError($"[Помилка] Ворог {gameObject.name} не зміг знайти RoadPath з тегом 'GameController'!");
+            return;
         }
 
-        if (waypoints == null || waypoints.Length == 0)
+        PathContainer pathContainer = pathObject.GetComponent<PathContainer>();
+        if (pathContainer != null)
         {
-            Debug.LogError($"[Помилка] Ворог {gameObject.name} знайшов RoadPath, але всередині нього немає точок, або тег злетів!");
+            _waypoints = pathContainer.Points;
         }
     }
 
     void Update()
     {
-        if (waypoints == null || waypoints.Length == 0 || hasReachedEnd) return;
+        if (_waypoints == null || _waypoints.Length == 0 || _hasReachedEnd) return;
 
-        Transform targetWaypoint = waypoints[currentWaypointIndex];
+        Transform targetWaypoint = _waypoints[_currentWaypointIndex];
         if (targetWaypoint == null) return;
 
-        transform.position = Vector2.MoveTowards(transform.position, targetWaypoint.position, speed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, targetWaypoint.position, _speed * Time.deltaTime);
 
-        if (Vector2.Distance(transform.position, targetWaypoint.position) < arrivalDistance)
+        if (Vector2.Distance(transform.position, targetWaypoint.position) < _arrivalDistance)
         {
-            if (currentWaypointIndex == waypoints.Length - 1)
+            if (_currentWaypointIndex == _waypoints.Length - 1)
             {
-                hasReachedEnd = true;
+                _hasReachedEnd = true;
                 return;
             }
 
-            currentWaypointIndex++;
+            _currentWaypointIndex++;
         }
     }
 }
