@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 3
   tags:
   - Tower
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Walkable
   - Water
   - UI
   - 
