@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,7 @@ public class BaseManager : MonoBehaviour
         {
             BaseHealth -= 10;
             Debug.Log("Hit");
+            Destroy(other.gameObject);
             Debug.Log("Base Health: " + BaseHealth);
             if (BaseHealth <= 0)
             {
