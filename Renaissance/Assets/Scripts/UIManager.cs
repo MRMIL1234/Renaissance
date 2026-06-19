@@ -6,7 +6,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private Slider hpSlider;
     [SerializeField] private TextMeshProUGUI hpText;
-    
+
     public void UpdateHP(int health)
     {
         if (health <= 0)
@@ -19,5 +19,9 @@ public class UIManager : MonoBehaviour
             hpSlider.value = health;
             hpText.text = "HP: " + health;
         }
+    }
+    public void ReloadScene()
+    {
+
     }
 }
