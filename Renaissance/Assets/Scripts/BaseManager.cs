@@ -14,8 +14,17 @@ public class BaseManager : MonoBehaviour
         get { return _baseHealth; }
         set
         {
-            _baseHealth = value;
-            uiManager.UpdateHP(_baseHealth);
+            if (value <= 0)
+            {
+                _baseHealth = 0;
+                uiManager.UpdateHP(_baseHealth);
+                GameOverState();
+            }
+            else
+            {
+                _baseHealth = value;
+                uiManager.UpdateHP(_baseHealth);
+            }
         }
     }
     void Start()
@@ -30,12 +39,12 @@ public class BaseManager : MonoBehaviour
             Debug.Log("Hit");
             Destroy(other.gameObject);
             Debug.Log("Base Health: " + BaseHealth);
-            if (BaseHealth <= 0)
-            {
-                Debug.Log("Game Over!");
-                // Implement game over logic here
-            }
         }
 
+    }
+    public void GameOverState()
+    {
+        uiManager.ShowGameOver();
+        Time.timeScale = 0f; // Pause the game
     }
 }
