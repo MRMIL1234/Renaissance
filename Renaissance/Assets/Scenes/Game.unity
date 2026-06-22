@@ -1699,9 +1699,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e861fe9738cb7a2499db145a83f6a341, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  enemyPrefab: {fileID: 2591656196304521163, guid: e06debda0b236424c86685e93f36151b, type: 3}
-  interval: 3
-  spawnPlace: {fileID: 595085381}
+  _interval: 5
+  _enemyPrefab: {fileID: 1530770314}
+  _spawnPlace: {fileID: 595085381}
+  _maxEnemiesInWave: 0
+  _currentEnemiesInWave: 0
 --- !u!1 &1377120554
 GameObject:
   m_ObjectHideFlags: 0
