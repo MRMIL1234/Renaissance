@@ -1345,7 +1345,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 178}
+  m_AnchoredPosition: {x: 0, y: 182.5095}
   m_SizeDelta: {x: 320, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &851659461
@@ -1699,10 +1699,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e861fe9738cb7a2499db145a83f6a341, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  _interval: 5
-  _enemyPrefab: {fileID: 1530770314}
+  _interval: 2
+  _timeBetweenWaves: 5
+  _waveTimer: 0
+  _enemyPrefab: {fileID: 2591656196304521163, guid: e06debda0b236424c86685e93f36151b, type: 3}
   _spawnPlace: {fileID: 595085381}
-  _maxEnemiesInWave: 0
+  _maxEnemiesInWave: 3
   _currentEnemiesInWave: 0
 --- !u!1 &1377120554
 GameObject:
