@@ -2,12 +2,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
-    [Header("HP UI")]
+    [Header("Gameplay UI")]
     [SerializeField] private Slider _hpSlider;
     [SerializeField] private TextMeshProUGUI _hpText;
+    [SerializeField] private TextMeshProUGUI _waveText;
 
     [Header("Game Over UI")]
     [SerializeField] private GameObject _gameOverPanel;
@@ -35,5 +37,9 @@ public class UIManager : MonoBehaviour
         _gameOverPanel.SetActive(false);
         SceneManager.LoadScene("MainMenu");
         Time.timeScale = 1f; // Resume the game
+    }
+    public void ShowWave(int wave)
+    {
+        _waveText.text = "Wave: " + wave;
     }
 }
