@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1421a8cfdbeab6c4ebd2670749b12f29, type: 3}
+  m_Name: NewTowerData
+  m_EditorClassIdentifier: Assembly-CSharp::TowerData
+  towerName: "\u0413\u0430\u0440\u043C\u0430\u0442\u0430"
+  sprite: {fileID: 1457785365919437122, guid: c1c43fa6dc9f8314d916401115bb5c02, type: 3}
+  cost: 400
+  damage: 40
+  attackRadius: 6
+  attackCooldown: 2.2
+  level: 1
+  upgradeCost: 300
