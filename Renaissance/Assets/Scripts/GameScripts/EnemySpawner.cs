@@ -2,42 +2,24 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject enemyPrefab; // Reference to the enemy prefab
-    [SerializeField] private float interval; // Time interval between spawns
-    [SerializeField] private Transform spawnPlace; // Position where enemies will be spawned
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        InvokeRepeating("SpawnEnemies", 0f, interval);
-    }
-    public void SpawnEnemies()
-    {
-        Instantiate(enemyPrefab, spawnPlace.position, Quaternion.identity);
-    }
-    // Update is called once per frame
-    void Update()
-    {
+    [Header("Настройки спавна")]
+    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private float interval = 2f;
+    [SerializeField] private Transform spawnPoint;
 
-    }
-    [Header("Характеристики")]
-    [SerializeField] private float health = 100f;
-    [SerializeField] private int coinReward = 25;
-
-    public void TakeDamage(float damage)
+    private void Start()
     {
-        health -= damage;
-        if (health <= 0)
-        {
-            Die();
-        }
+        InvokeRepeating(nameof(SpawnEnemy), 0f, interval);
     }
 
-    private void Die()
+    public void SpawnEnemy()
     {
-        if (GameEconomy.Instance != null)
-        {
-            GameEconomy.Instance.AddCoins(coinReward);
-        }
-        Destroy(gameObject);
+        if (enemyPrefab == null) return;
+        Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+    }
+
+    private void OnDestroy()
+    {
+        CancelInvoke();
     }
 }

@@ -191,7 +191,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2591656196304521163}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 119ab93337867244d8dd13c5a01456d8, type: 3}
+  m_Script: {fileID: 11500000, guid: e605004edcdd2244486a0d9f23f8a66c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   health: 100
