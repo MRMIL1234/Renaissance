@@ -51,12 +51,19 @@ public class PlacementManager : MonoBehaviour
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            // OverlapCircle работает с trigger-коллайдерами, в отличие от Raycast
+            RaycastHit2D[] allHits = Physics2D.RaycastAll(mousePos, Vector2.zero);
+            foreach (var h in allHits)
+            {
+                Debug.Log($"[DEBUG] Raycast hit: {h.collider.name}, Layer: {h.collider.gameObject.layer}, Trigger: {h.collider.isTrigger}");
+            }
             Collider2D hit = Physics2D.OverlapCircle(mousePos, 0.3f);
 
+
+            Debug.Log($"[PlacementManager] Клик в позиции: {mousePos}, hit: {hit?.name ?? "null"}");
             if (hit != null)
             {
                 Tower tower = hit.GetComponent<Tower>();
+                Debug.Log($"[PlacementManager] Tower component: {(tower != null ? "найден" : "NULL")}");
                 if (tower != null)
                 {
                     Debug.Log($"[PlacementManager] Башня найдена: {tower.Stats.TowerName}");
