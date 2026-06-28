@@ -7,16 +7,18 @@ public class PlacementManager : MonoBehaviour
 {
     [Header("Настройки шару")]
     [SerializeField] private LayerMask placementLayer;
-    [SerializeField] private int placedTowerLayerNumber = 8;
+    [SerializeField] private int placedTowerLayerNumber = 6;
 
-    [Header("UI Панель Апгрейду")]
+    [Header("Upgrade Panel UI")]
     [SerializeField] private GameObject upgradePanel;
     [SerializeField] private TextMeshProUGUI upgradeCostText;
     [SerializeField] private TextMeshProUGUI feedbackText;
     [SerializeField] private TextMeshProUGUI towerInfoText;
     [SerializeField] private Image upgradeButtonImage;
+    [SerializeField] private Button upgradeButton;
     [SerializeField] private Color affordableColor = new Color(0.2f, 0.7f, 0.2f);
     [SerializeField] private Color unaffordableColor = new Color(0.7f, 0.2f, 0.2f);
+    [SerializeField] private Color disabledColor = new Color(0.5f, 0.5f, 0.5f);
 
     private GameObject currentTowerPrefab;
     private GameObject ghostTower;
@@ -29,6 +31,7 @@ public class PlacementManager : MonoBehaviour
 
     private void Update()
     {
+        // Режим размещения башни
         if (currentTowerPrefab != null)
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -47,37 +50,28 @@ public class PlacementManager : MonoBehaviour
             return;
         }
 
+        // Клик когда НЕ в режиме размещения — открыть панель апгрейда или закрыть
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            RaycastHit2D[] allHits = Physics2D.RaycastAll(mousePos, Vector2.zero);
-            foreach (var h in allHits)
-            {
-                Debug.Log($"[DEBUG] Raycast hit: {h.collider.name}, Layer: {h.collider.gameObject.layer}, Trigger: {h.collider.isTrigger}");
-            }
-            Collider2D hit = Physics2D.OverlapCircle(mousePos, 0.3f);
+            // Ищем башню под курсором
+            Collider2D hit = Physics2D.OverlapCircle(mousePos, 0.5f, placementLayer);
 
-
-            Debug.Log($"[PlacementManager] Клик в позиции: {mousePos}, hit: {hit?.name ?? "null"}");
             if (hit != null)
             {
                 Tower tower = hit.GetComponent<Tower>();
-                Debug.Log($"[PlacementManager] Tower component: {(tower != null ? "найден" : "NULL")}");
                 if (tower != null)
                 {
-                    Debug.Log($"[PlacementManager] Башня найдена: {tower.Stats.TowerName}");
                     OpenUpgradePanel(tower);
                 }
                 else
                 {
-                    Debug.Log($"[PlacementManager] Кликнули не на башню: {hit.name}");
                     CloseUpgradePanel();
                 }
             }
             else
             {
-                Debug.Log("[PlacementManager] Кликнули в пустоту");
                 CloseUpgradePanel();
             }
         }
@@ -174,19 +168,23 @@ public class PlacementManager : MonoBehaviour
         bool canAfford = GameEconomy.Instance.CanAfford(selectedTower.CurrentUpgradeCost);
 
         if (upgradeButtonImage != null)
-            upgradeButtonImage.color = canAfford ? affordableColor : unaffordableColor;
+            upgradeButtonImage.color = canAfford ? affordableColor : disabledColor;
 
+        if (upgradeButton != null)
+            upgradeButton.interactable = canAfford;
+
+        // Clear feedback when panel opens
         if (feedbackText != null)
-            feedbackText.text = canAfford ? "" : "Недостаточно монет!";
+            feedbackText.text = "";
 
-        Debug.Log($"[PlacementManager] UpdateUpgradeUI вызван. Tower: {selectedTower.Stats.TowerName}, Cost: {selectedTower.CurrentUpgradeCost}, CanAfford: {canAfford}");
+        Debug.Log($"[PlacementManager] UpdateUpgradeUI: Tower={selectedTower.Stats.TowerName}, Cost={selectedTower.CurrentUpgradeCost}, CanAfford={canAfford}");
     }
 
     public void TryUpgradeSelectedTower()
     {
         if (selectedTower == null)
         {
-            Debug.Log("[PlacementManager] Апгрейд: selectedTower == null");
+            Debug.Log("[PlacementManager] Upgrade: selectedTower == null");
             return;
         }
 
@@ -201,7 +199,7 @@ public class PlacementManager : MonoBehaviour
         }
         else
         {
-            if (feedbackText != null) feedbackText.text = "Недостаточно монет!";
+            if (feedbackText != null) feedbackText.text = "Not enough coins!";
         }
     }
 
