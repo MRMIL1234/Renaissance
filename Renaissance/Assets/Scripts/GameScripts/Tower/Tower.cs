@@ -12,7 +12,10 @@ public class Tower : MonoBehaviour
     [SerializeField] private Transform firePoint;
 
     public TowerData Stats => stats;
-    public int CurrentLevel { get; private set; } = 1;
+    public int CurrentLevel { get; 
+        private set
+            
+            ; } = 1;
     public float CurrentDamage { get; private set; }
     public float CurrentCooldown { get; private set; }
     public int CurrentUpgradeCost { get; private set; }

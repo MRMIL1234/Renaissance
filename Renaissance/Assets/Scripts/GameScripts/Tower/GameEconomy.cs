@@ -13,7 +13,13 @@ public class GameEconomy : MonoBehaviour
     [SerializeField] private TextMeshProUGUI coinsText;
 
     // Властивість для безпечного читання кількості монет іншими скриптами
-    public int Coins => coins;
+    public int Coins
+    {
+        get { return coins; }
+        set { coins = value; 
+        }
+    }
+
 
     private void Awake()
     {

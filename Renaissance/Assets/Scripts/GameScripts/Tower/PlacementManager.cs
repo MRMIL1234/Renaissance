@@ -5,6 +5,7 @@ using TMPro;
 
 public class PlacementManager : MonoBehaviour
 {
+
     [Header("Настройки шару")]
     [SerializeField] private LayerMask placementLayer;
     [SerializeField] private int placedTowerLayerNumber = 6;
@@ -13,7 +14,10 @@ public class PlacementManager : MonoBehaviour
     [SerializeField] private GameObject upgradePanel;
     [SerializeField] private TextMeshProUGUI upgradeCostText;
     [SerializeField] private TextMeshProUGUI feedbackText;
-    [SerializeField] private TextMeshProUGUI towerInfoText;
+    [SerializeField] private TextMeshProUGUI towerNameText;
+    [SerializeField] private TextMeshProUGUI towerCostText;
+    [SerializeField] private TextMeshProUGUI towerDamageText;
+    [SerializeField] private TextMeshProUGUI towerLevelText;
     [SerializeField] private Image upgradeButtonImage;
     [SerializeField] private Button upgradeButton;
     [SerializeField] private Color affordableColor = new Color(0.2f, 0.7f, 0.2f);
@@ -156,14 +160,22 @@ public class PlacementManager : MonoBehaviour
     {
         if (selectedTower == null) return;
 
+        
+
         if (upgradeCostText != null)
             upgradeCostText.text = $"{selectedTower.CurrentUpgradeCost} Coins";
 
-        if (towerInfoText != null)
-            towerInfoText.text = $"{selectedTower.Stats.TowerName}\n" +
-                                 $"LVL: {selectedTower.CurrentLevel}\n" +
-                                 $"DMG: {selectedTower.CurrentDamage:F1}\n" +
-                                 $"SPD: {selectedTower.CurrentCooldown:F2}s";
+        if (towerNameText != null)
+            towerNameText.text = $"{selectedTower.Stats.TowerName}";
+
+        if (towerCostText != null)
+            towerCostText.text = $"Cost: {selectedTower.CurrentUpgradeCost}";
+
+        if (towerDamageText != null)
+            towerDamageText.text = $"Damage: {selectedTower.CurrentDamage}";
+
+        if (towerLevelText != null)
+            towerLevelText.text = $"LVL: {selectedTower.CurrentLevel}";
 
         bool canAfford = GameEconomy.Instance.CanAfford(selectedTower.CurrentUpgradeCost);
 
