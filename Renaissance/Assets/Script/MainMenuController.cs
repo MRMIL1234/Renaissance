@@ -17,7 +17,7 @@ public class MainMenuController : MonoBehaviour
  
     public void OnPlayClicked()
     {
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("LevelMap");
     }
  
     public void OnCreditsClicked()
