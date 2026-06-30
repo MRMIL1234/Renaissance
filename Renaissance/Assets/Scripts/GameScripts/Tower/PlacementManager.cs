@@ -124,6 +124,14 @@ public class PlacementManager : MonoBehaviour
 
         Collider2D groundHit = Physics2D.OverlapBox(position, towerSize * 0.9f, 0f, placementLayer);
 
+        if (groundHit.gameObject.layer.Equals("Ground"))
+        {
+            Debug.Log("Ground");
+        }
+        else
+        {
+            return;
+        }
         if (groundHit != null)
         {
             int towerLayerMask = 1 << placedTowerLayerNumber;
