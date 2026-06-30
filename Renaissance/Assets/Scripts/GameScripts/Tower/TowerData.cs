@@ -21,6 +21,8 @@ public class TowerData : ScriptableObject
     private float cooldownMultiplier = 0.9f;
     [SerializeField, Tooltip("На скільки дорожчає наступний рівень (наприклад, 1.5 = +50%)")]
     private float costMultiplier = 1.5f;
+    [SerializeField, Tooltip("На скільки множиться радіус атаки (наприклад, 1.1 = +10% до радіусу)")]
+    private float radiusMultiplier = 1.1f;
 
     // Публічні властивості тільки для читання (Getters)
     public string TowerName => towerName;
@@ -33,4 +35,5 @@ public class TowerData : ScriptableObject
     public float DamageMultiplier => damageMultiplier;
     public float CooldownMultiplier => cooldownMultiplier;
     public float CostMultiplier => costMultiplier;
+    public float RadiusMultiplier => radiusMultiplier;
 }

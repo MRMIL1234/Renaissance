@@ -5,7 +5,6 @@ using TMPro;
 
 public class PlacementManager : MonoBehaviour
 {
-
     [Header("Настройки шару")]
     [SerializeField] private LayerMask placementLayer;
     [SerializeField] private int placedTowerLayerNumber = 6;
@@ -27,6 +26,7 @@ public class PlacementManager : MonoBehaviour
     private GameObject currentTowerPrefab;
     private GameObject ghostTower;
     private Tower selectedTower;
+    private Transform activeRangeIndicator;
 
     private void Start()
     {
@@ -35,7 +35,6 @@ public class PlacementManager : MonoBehaviour
 
     private void Update()
     {
-        // Режим размещения башни
         if (currentTowerPrefab != null)
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -54,13 +53,12 @@ public class PlacementManager : MonoBehaviour
             return;
         }
 
-        // Клик когда НЕ в режиме размещения — открыть панель апгрейда или закрыть
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            // Ищем башню под курсором
-            Collider2D hit = Physics2D.OverlapCircle(mousePos, 0.5f, placementLayer);
+            int towerLayerMask = 1 << placedTowerLayerNumber;
+            Collider2D hit = Physics2D.OverlapCircle(mousePos, 0.5f, towerLayerMask);
 
             if (hit != null)
             {
@@ -86,7 +84,6 @@ public class PlacementManager : MonoBehaviour
         Tower towerScript = towerPrefab.GetComponent<Tower>();
         if (towerScript == null || towerScript.Stats == null) return;
 
-        // Звертаємося до BaseCost з великої літери
         if (!GameEconomy.Instance.CanAfford(towerScript.Stats.BaseCost))
         {
             Debug.Log("Замало монет!");
@@ -98,7 +95,6 @@ public class PlacementManager : MonoBehaviour
 
         ghostTower = Instantiate(towerPrefab);
 
-        // Отключаем ВСЕ коллайдеры на ghost-башне, чтобы она не перехватывала клики
         foreach (Collider2D col in ghostTower.GetComponents<Collider2D>())
         {
             col.enabled = false;
@@ -110,7 +106,6 @@ public class PlacementManager : MonoBehaviour
         if (rangeIndicator != null)
         {
             rangeIndicator.gameObject.SetActive(true);
-            // Звертаємося до AttackRadius
             float diameter = towerScript.Stats.AttackRadius * 2f;
             rangeIndicator.localScale = new Vector3(diameter, diameter, 1f);
 
@@ -127,30 +122,55 @@ public class PlacementManager : MonoBehaviour
         BoxCollider2D prefabCollider = currentTowerPrefab.GetComponent<BoxCollider2D>();
         Vector2 towerSize = prefabCollider != null ? prefabCollider.size : new Vector2(1f, 1f);
 
-        Collider2D hit = Physics2D.OverlapBox(position, towerSize, 0f, placementLayer);
+        Collider2D groundHit = Physics2D.OverlapBox(position, towerSize * 0.9f, 0f, placementLayer);
 
-        if (hit == null)
+        if (groundHit != null)
         {
-            Tower prefabScript = currentTowerPrefab.GetComponent<Tower>();
-            GameEconomy.Instance.SpendCoins(prefabScript.Stats.BaseCost);
+            int towerLayerMask = 1 << placedTowerLayerNumber;
+            Collider2D towerHit = Physics2D.OverlapBox(position, towerSize * 0.9f, 0f, towerLayerMask);
 
-            GameObject newTower = Instantiate(currentTowerPrefab, position, Quaternion.identity);
-            newTower.layer = placedTowerLayerNumber;
+            if (towerHit == null)
+            {
+                Tower prefabScript = currentTowerPrefab.GetComponent<Tower>();
+                GameEconomy.Instance.SpendCoins(prefabScript.Stats.BaseCost);
 
-            CancelPlacement();
+                GameObject newTower = Instantiate(currentTowerPrefab, position, Quaternion.identity);
+                newTower.layer = placedTowerLayerNumber;
+
+                CancelPlacement();
+            }
         }
     }
 
     private void OpenUpgradePanel(Tower tower)
     {
+        if (activeRangeIndicator != null) activeRangeIndicator.gameObject.SetActive(false);
+
         selectedTower = tower;
-        Debug.Log($"[PlacementManager] OpenUpgradePanel: {tower.Stats.TowerName}, panel={upgradePanel}");
+
+        if (selectedTower != null)
+        {
+            activeRangeIndicator = selectedTower.transform.Find("RangeIndicator");
+            if (activeRangeIndicator != null)
+            {
+                float diameter = selectedTower.CurrentAttackRadius * 2f;
+                activeRangeIndicator.localScale = new Vector3(diameter, diameter, 1f);
+                activeRangeIndicator.gameObject.SetActive(true);
+            }
+        }
+
         if (upgradePanel != null) upgradePanel.SetActive(true);
         UpdateUpgradeUI();
     }
 
     private void CloseUpgradePanel()
     {
+        if (activeRangeIndicator != null)
+        {
+            activeRangeIndicator.gameObject.SetActive(false);
+            activeRangeIndicator = null;
+        }
+
         selectedTower = null;
         if (upgradePanel != null) upgradePanel.SetActive(false);
         if (feedbackText != null) feedbackText.text = "";
@@ -159,8 +179,6 @@ public class PlacementManager : MonoBehaviour
     private void UpdateUpgradeUI()
     {
         if (selectedTower == null) return;
-
-        
 
         if (upgradeCostText != null)
             upgradeCostText.text = $"{selectedTower.CurrentUpgradeCost} Coins";
@@ -185,22 +203,27 @@ public class PlacementManager : MonoBehaviour
         if (upgradeButton != null)
             upgradeButton.interactable = canAfford;
 
-        // Clear feedback when panel opens
         if (feedbackText != null)
             feedbackText.text = "";
 
-        Debug.Log($"[PlacementManager] UpdateUpgradeUI: Tower={selectedTower.Stats.TowerName}, Cost={selectedTower.CurrentUpgradeCost}, CanAfford={canAfford}");
+        if (activeRangeIndicator != null)
+        {
+            float diameter = selectedTower.CurrentAttackRadius * 2f;
+            activeRangeIndicator.localScale = new Vector3(diameter, diameter, 1f);
+        }
+    }
+
+    public void RefreshUpgradeUIIfActive()
+    {
+        if (upgradePanel != null && upgradePanel.activeInHierarchy && selectedTower != null)
+        {
+            UpdateUpgradeUI();
+        }
     }
 
     public void TryUpgradeSelectedTower()
     {
-        if (selectedTower == null)
-        {
-            Debug.Log("[PlacementManager] Upgrade: selectedTower == null");
-            return;
-        }
-
-        Debug.Log($"[PlacementManager] TryUpgrade: Cost={selectedTower.CurrentUpgradeCost}, HasCoins={GameEconomy.Instance.CanAfford(selectedTower.CurrentUpgradeCost)}");
+        if (selectedTower == null) return;
 
         if (GameEconomy.Instance.CanAfford(selectedTower.CurrentUpgradeCost))
         {

@@ -12,13 +12,11 @@ public class Tower : MonoBehaviour
     [SerializeField] private Transform firePoint;
 
     public TowerData Stats => stats;
-    public int CurrentLevel { get; 
-        private set
-            
-            ; } = 1;
+    public int CurrentLevel { get; private set; } = 1;
     public float CurrentDamage { get; private set; }
     public float CurrentCooldown { get; private set; }
     public int CurrentUpgradeCost { get; private set; }
+    public float CurrentAttackRadius { get; private set; }
 
     private float nextAttackTime;
     private Transform currentTarget;
@@ -27,10 +25,10 @@ public class Tower : MonoBehaviour
     {
         if (stats != null)
         {
-            // Звертаємося до захищених властивостей з великої літери
             CurrentDamage = stats.BaseDamage;
             CurrentCooldown = stats.BaseAttackCooldown;
             CurrentUpgradeCost = stats.BaseUpgradeCost;
+            CurrentAttackRadius = stats.AttackRadius;
 
             if (stats.Sprite != null)
                 GetComponent<SpriteRenderer>().sprite = stats.Sprite;
@@ -44,7 +42,7 @@ public class Tower : MonoBehaviour
     {
         if (stats == null) return;
 
-        if (currentTarget == null || Vector2.Distance(transform.position, currentTarget.position) > stats.AttackRadius)
+        if (currentTarget == null || Vector2.Distance(transform.position, currentTarget.position) > CurrentAttackRadius)
         {
             FindTarget();
         }
@@ -62,11 +60,12 @@ public class Tower : MonoBehaviour
         CurrentDamage *= stats.DamageMultiplier;
         CurrentCooldown *= stats.CooldownMultiplier;
         CurrentUpgradeCost = Mathf.RoundToInt(CurrentUpgradeCost * stats.CostMultiplier);
+        CurrentAttackRadius *= stats.RadiusMultiplier;
     }
 
     private void FindTarget()
     {
-        Collider2D[] enemiesInRange = Physics2D.OverlapCircleAll(transform.position, stats.AttackRadius, enemyLayer);
+        Collider2D[] enemiesInRange = Physics2D.OverlapCircleAll(transform.position, CurrentAttackRadius, enemyLayer);
         float shortestDistance = Mathf.Infinity;
         Transform nearestEnemy = null;
 
@@ -101,7 +100,8 @@ public class Tower : MonoBehaviour
         if (stats != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, stats.AttackRadius);
+            float radiusToDraw = Application.isPlaying ? CurrentAttackRadius : stats.AttackRadius;
+            Gizmos.DrawWireSphere(transform.position, radiusToDraw);
         }
     }
 }

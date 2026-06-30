@@ -3,7 +3,6 @@ using TMPro;
 
 public class GameEconomy : MonoBehaviour
 {
-    // Тепер ніхто ззовні не зможе випадково стерти або підмінити Instance
     public static GameEconomy Instance { get; private set; }
 
     [Header("Налаштування")]
@@ -12,18 +11,24 @@ public class GameEconomy : MonoBehaviour
     [Header("UI Текст")]
     [SerializeField] private TextMeshProUGUI coinsText;
 
-    // Властивість для безпечного читання кількості монет іншими скриптами
     public int Coins
     {
         get { return coins; }
-        set { coins = value; 
+        set
+        {
+            coins = value;
+            UpdateCoinsUI();
+
+            PlacementManager placementManager = Object.FindFirstObjectByType<PlacementManager>();
+            if (placementManager != null)
+            {
+                placementManager.RefreshUpgradeUIIfActive();
+            }
         }
     }
 
-
     private void Awake()
     {
-        // Класичний Singleton захист
         if (Instance == null)
         {
             Instance = this;
@@ -48,15 +53,13 @@ public class GameEconomy : MonoBehaviour
     {
         if (CanAfford(amount))
         {
-            coins -= amount;
-            UpdateCoinsUI();
+            Coins -= amount;
         }
     }
 
     public void AddCoins(int amount)
     {
-        coins += amount;
-        UpdateCoinsUI();
+        Coins += amount;
     }
 
     private void UpdateCoinsUI()
