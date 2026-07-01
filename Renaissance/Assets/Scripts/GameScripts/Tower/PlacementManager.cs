@@ -43,7 +43,7 @@ public class PlacementManager : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
-                PlaceTower(mousePos);
+                PlaceTower(mousePos); // тут
             }
 
             if (Input.GetMouseButtonDown(1))
@@ -124,12 +124,13 @@ public class PlacementManager : MonoBehaviour
 
         Collider2D groundHit = Physics2D.OverlapBox(position, towerSize * 0.9f, 0f, placementLayer);
 
-        if (groundHit.gameObject.layer.Equals("Ground"))
+        if (groundHit != null && groundHit.gameObject.layer.Equals("Ground") )
         {
             Debug.Log("Ground");
         }
         else
         {
+            CancelPlacement();
             return;
         }
         if (groundHit != null)
