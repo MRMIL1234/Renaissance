@@ -122,34 +122,39 @@ public class PlacementManager : MonoBehaviour
         BoxCollider2D prefabCollider = currentTowerPrefab.GetComponent<BoxCollider2D>();
         Vector2 towerSize = prefabCollider != null ? prefabCollider.size : new Vector2(1f, 1f);
 
-        Collider2D groundHit = Physics2D.OverlapBox(position, towerSize * 0.9f, 0f, placementLayer);
+        Collider2D[] groundHits = Physics2D.OverlapBoxAll(position, towerSize * 0.9f, 0f, placementLayer);
 
-        // Замініть перевірку у вашому методі PlaceTower на цю:
-        if (groundHit != null && LayerMask.LayerToName(groundHit.gameObject.layer) == "Ground")
+        
+        // 1. Создаем флаг перед циклом. Изначально считаем, что земли под башней нет 🚩
+        bool isOnGround = false;
+
+        // 2. Цикл перебирает абсолютно все коллайдеры, которые зацепил OverlapBoxAll 🔄
+        foreach (Collider2D groundHit in groundHits)
         {
-            Debug.Log("Ground");
+            // Проверяем, принадлежит ли текущий объект к слою "Ground" 🗺️
+            if (groundHit.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            {
+                isOnGround = true; // Если нашли хотя бы один кусочек земли — флаг становится true!
+            }
+        }
+
+        // 3. Наша финальная проверка! Строить можно ТОЛЬКО если флаг равен true 🏗️
+        if (isOnGround)
+        {
+            Tower prefabScript = currentTowerPrefab.GetComponent<Tower>();
+            GameEconomy.Instance.SpendCoins(prefabScript.Stats.BaseCost);
+
+            GameObject newTower = Instantiate(currentTowerPrefab, position, Quaternion.identity);
+            newTower.layer = placedTowerLayerNumber;
+            CancelPlacement();
         }
         else
         {
+            // Если земли нет (или там только дорога), выводим предупреждение
+            Debug.Log("Здесь нельзя строить башни!");
             CancelPlacement();
-            return;
         }
-        if (groundHit != null)
-        {
-            int towerLayerMask = 1 << placedTowerLayerNumber;
-            Collider2D towerHit = Physics2D.OverlapBox(position, towerSize * 0.9f, 0f, towerLayerMask);
 
-            if (towerHit == null)
-            {
-                Tower prefabScript = currentTowerPrefab.GetComponent<Tower>();
-                GameEconomy.Instance.SpendCoins(prefabScript.Stats.BaseCost);
-
-                GameObject newTower = Instantiate(currentTowerPrefab, position, Quaternion.identity);
-                newTower.layer = placedTowerLayerNumber;
-
-                CancelPlacement();
-            }
-        }
     }
 
     private void OpenUpgradePanel(Tower tower)
