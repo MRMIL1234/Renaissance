@@ -124,7 +124,8 @@ public class PlacementManager : MonoBehaviour
 
         Collider2D groundHit = Physics2D.OverlapBox(position, towerSize * 0.9f, 0f, placementLayer);
 
-        if (groundHit != null && groundHit.gameObject.layer.Equals("Ground") )
+        // Замініть перевірку у вашому методі PlaceTower на цю:
+        if (groundHit != null && LayerMask.LayerToName(groundHit.gameObject.layer) == "Ground")
         {
             Debug.Log("Ground");
         }
