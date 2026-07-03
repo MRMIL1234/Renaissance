@@ -121,40 +121,34 @@ public class PlacementManager : MonoBehaviour
     {
         BoxCollider2D prefabCollider = currentTowerPrefab.GetComponent<BoxCollider2D>();
         Vector2 towerSize = prefabCollider != null ? prefabCollider.size : new Vector2(1f, 1f);
-
         Collider2D[] groundHits = Physics2D.OverlapBoxAll(position, towerSize * 0.9f, 0f, placementLayer);
-
-        
-        // 1. Создаем флаг перед циклом. Изначально считаем, что земли под башней нет 🚩
-        bool isOnGround = false;
-
-        // 2. Цикл перебирает абсолютно все коллайдеры, которые зацепил OverlapBoxAll 🔄
+        // Проверяем: если там ЕСТЬ дорога - нельзя строить!
         foreach (Collider2D groundHit in groundHits)
         {
-            // Проверяем, принадлежит ли текущий объект к слою "Ground" 🗺️
-            if (groundHit.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            if (groundHit.gameObject.layer == LayerMask.NameToLayer("Road"))
             {
-                isOnGround = true; // Если нашли хотя бы один кусочек земли — флаг становится true!
+                Debug.Log("Здесь дорога!");
+                CancelPlacement();
+                return;
             }
         }
-
-        // 3. Наша финальная проверка! Строить можно ТОЛЬКО если флаг равен true 🏗️
-        if (isOnGround)
+        // Проверяем: если там ЕСТЬ земля - можно строить
+        foreach (Collider2D groundHit in groundHits)
         {
-            Tower prefabScript = currentTowerPrefab.GetComponent<Tower>();
-            GameEconomy.Instance.SpendCoins(prefabScript.Stats.BaseCost);
-
-            GameObject newTower = Instantiate(currentTowerPrefab, position, Quaternion.identity);
-            newTower.layer = placedTowerLayerNumber;
-            CancelPlacement();
+            if (groundHit.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            {
+                // Строим башню
+                Tower prefabScript = currentTowerPrefab.GetComponent<Tower>();
+                GameEconomy.Instance.SpendCoins(prefabScript.Stats.BaseCost);
+                GameObject newTower = Instantiate(currentTowerPrefab, position, Quaternion.identity);
+                newTower.layer = placedTowerLayerNumber;
+                CancelPlacement();
+                return;
+            }
         }
-        else
-        {
-            // Если земли нет (или там только дорога), выводим предупреждение
-            Debug.Log("Здесь нельзя строить башни!");
-            CancelPlacement();
-        }
-
+        // Ни земли, ни дороги - просто отменяем
+        Debug.Log("Здесь нельзя строить!");
+        CancelPlacement();
     }
 
     private void OpenUpgradePanel(Tower tower)
