@@ -1,3 +1,4 @@
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,12 +7,10 @@ using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
-    [Header("Gameplay UI")]
     [SerializeField] private Slider _hpSlider;
     [SerializeField] private TextMeshProUGUI _hpText;
     [SerializeField] private TextMeshProUGUI _waveText;
-
-    [Header("Game Over UI")]
+    [SerializeField] private TextMeshProUGUI _waveTimerText;
     [SerializeField] private GameObject _gameOverPanel;
     void Start()
     {
@@ -42,4 +41,18 @@ public class UIManager : MonoBehaviour
     {
         _waveText.text = "Wave: " + wave;
     }
+
+    public void ShowWaveTimer(bool show)
+    {
+        if (_waveTimerText == null) return;
+        _waveTimerText.gameObject.SetActive(show);
+    }
+
+    public void UpdateWaveTimer(float timeLeft)
+    {
+        if (_waveTimerText == null) return;
+        int secondsLeft = Mathf.CeilToInt(Mathf.Max(timeLeft, 0f));
+        _waveTimerText.text = "Наступна хвиля через: " + secondsLeft + "с";
+    }
 }
+ 

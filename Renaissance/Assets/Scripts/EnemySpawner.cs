@@ -1,13 +1,11 @@
+
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("Scripts")]
     [SerializeField] private UIManager uiManager;
-
-    [Header("Enemy Spawning Settings")]
     [SerializeField] private float _interval = 2f; // Time interval between spawns
     [SerializeField] private float _timeBetweenWaves = 10f; // Time between waves of enemies
     [SerializeField] private float _waveTimer;
@@ -49,8 +47,33 @@ public class EnemySpawner : MonoBehaviour
         {
             WaveCounter++;
             _currentEnemiesInWave = 0;
+
+            // Ховаємо таймер на час активного спавну хвилі
+            uiManager.ShowWaveTimer(false);
             yield return StartCoroutine(WaveRoutine());
-            yield return new WaitForSeconds(_timeBetweenWaves);
+
+            // Показуємо таймер до наступної хвилі (окрім випадку, коли хвиля остання)
+            bool isLastWave = (i == _totalWaves - 1);
+            if (!isLastWave)
+            {
+                yield return StartCoroutine(WaveCountdownRoutine());
+            }
         }
     }
+
+    private IEnumerator WaveCountdownRoutine()
+    {
+        _waveTimer = _timeBetweenWaves;
+        uiManager.ShowWaveTimer(true);
+
+        while (_waveTimer > 0f)
+        {
+            uiManager.UpdateWaveTimer(_waveTimer);
+            yield return null;
+            _waveTimer -= Time.deltaTime;
+        }
+
+        uiManager.ShowWaveTimer(false);
+    }
 }
+ 
