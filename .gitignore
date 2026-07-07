@@ -77,3 +77,7 @@ Renaissance/[Aa]ssets/[Ss]treamingAssets/aa/*
 # Unity Package Manager
 Renaissance/Packages/manifest.json.lock
 Renaissance/Packages/packages-lock.json
+
+# Local scripts (not part of the game)
+*.bat
+*.ps1
