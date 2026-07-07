@@ -1,13 +1,10 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BaseManager : MonoBehaviour
 {
     [SerializeField] private UIManager uiManager;
 
     [SerializeField] private int _baseHealth = 100;
-    [SerializeField] private int _baseCoins = 30; // пока не используется, но пусть будет инкапсулирован
 
     public int BaseHealth
     {
