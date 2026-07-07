@@ -13,10 +13,10 @@ TagManager:
   - Walkable
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Towers
+  - Enemy
+  - Ground
+  - Road
   - 
   - 
   - 
