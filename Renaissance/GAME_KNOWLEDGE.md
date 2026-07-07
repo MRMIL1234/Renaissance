@@ -1,6 +1,14 @@
-# Renaissance Project — Unity 2D Tower Defense
+# Renaissance — Game Knowledge Base
 
-## Архитектура (текущая)
+## О проекте
+
+**Название:** Renaissance
+**Движок:** Unity 6000.4.10f1
+**Тип:** 2D Tower Defense прототип
+**Платформа:** Windows
+**Дата обновления:** 07.07.2026
+
+## Архитектура
 
 ```
 Scripts/
@@ -11,7 +19,7 @@ Scripts/
 │   │   ├── PlacementManager.cs — Расстановка, ghost-башня, панель апгрейда
 │   │   ├── GameEconomy.cs     — Синглтон управления монетами
 │   │   └── Projectile.cs      — Снаряды: поиск цели, урон
-│   ├── Enemy.cs                — (СОЗДАНО) Здоровье, урон, смерть врага
+│   ├── Enemy.cs                — Здоровье, урон, смерть врага
 │   ├── EnemySpawner.cs        — Спавн волн врагов (ТОЛЬКО спавн!)
 │   ├── WaypointFollower2D.cs  — Движение врага по пути
 │   └── PathContainer.cs       — Контейнер точек пути (дети объекта)
@@ -21,6 +29,7 @@ Scripts/
 ```
 
 ## Ключевые связи
+
 - `GameEconomy.Instance` — синглтон, доступен отовсюду
 - `PlacementManager` — управляет расстановкой башен и панелью апгрейда
 - `Tower` ищет врагов через `Physics2D.OverlapCircleAll`
@@ -29,51 +38,84 @@ Scripts/
 - `Enemy.Die()` — награда монетами через `GameEconomy.AddCoins`
 - `BaseManager.OnTriggerEnter2D` — враг касается базы, отнимает HP
 
-## Что пофикшено (26.06.2025)
+## Стандарты кода
 
-### 1. Enemy и EnemySpawner разделены
+- **Приватные поля:** `_health`, `_coins` (нижнее подчёркивание)
+- **Синглтоны:** только для менеджеров
+- **Инкапсуляция:** все данные приватные, доступ через свойства/методы
+
+Подробнее: [AGENTS.md](../AGENTS.md)
+
+---
+
+## История изменений
+
+### 07.07.2026
+
+#### Чистка репозитория
+
+| Коммит | Изменение |
+|--------|-----------|
+| `52fa12f` | .gitignore перенесён в корень репозитория |
+| `cd57b1b` | Удалён неиспользуемый `using Unity.VisualScripting` и поле `_baseCoins` в BaseManager |
+| `bcb61cd` | Создан `.gitattributes` для нормализации LF |
+| `6d88e08` | `*.bat`, `*.ps1` добавлены в .gitignore; удалён дубликат .gitattributes |
+| — | Создан `AGENTS.md` с гайдлайнами для AI агентов |
+
+### 26.06.2026
+
+#### 1. Enemy и EnemySpawner разделены
+
 **Было:** EnemySpawner содержал и логику спавна, и здоровье врага. Урон от снаряда попадал в EnemySpawner.
 **Стало:** Создан отдельный `Enemy.cs` с `TakeDamage`, `Die`, `coinReward`. EnemySpawner теперь только спавнит.
 **Файл:** `Enemy.cs` — новый, `EnemySpawner.cs` — переписан
 
-### 2. Слой башни
+#### 2. Слой башни
+
 **Было:** `Mathf.RoundToInt(Mathf.Log(towerLayer.value, 2))` — ненадёжная формула
 **Стало:** Явное поле `placedTowerLayerNumber` (int), присваивается напрямую
 **Файл:** `PlacementManager.cs:9-10, 121`
 
-### 3. Ghost-башня перехватывала клики
+#### 3. Ghost-башня перехватывала клики
+
 **Было:** Отключался только `BoxCollider2D`
 **Стало:** `foreach (Collider2D col in ghostTower.GetComponents<Collider2D>()) col.enabled = false;`
 **Файл:** `PlacementManager.cs:85-88`
 
-### 4. UI feedback при недостатке монет
+#### 4. UI feedback при недостатке монет
+
 **Было:** `TryUpgradeSelectedTower` молча `return;` если денег нет
 **Стало:** Добавлены `feedbackText`, `upgradeButtonImage`, цветовая индикация кнопки
 **Новые поля в инспекторе:** `feedbackText`, `upgradeButtonImage`, `affordableColor`, `unaffordableColor`
 **Файл:** `PlacementManager.cs`
 
-## Инспектор — что подключить после фиксов
+---
+
+## Инспектор — что подключить
 
 ### PlacementManager
+
 | Поле | Что |
 |------|-----|
 | `placementLayer` | LayerMask — слой для размещения башен |
 | `placedTowerLayerNumber` | Номер слоя башни (напр. 8) |
 | `upgradePanel` | Панель апгрейда (Canvas/UI) |
 | `upgradeCostText` | TMP текст цены |
-| `feedbackText` | TMP текст ошибки ("Недостаточно монет!") |
+| `feedbackText` | TMP текст ошибки ("Not enough coins!") |
 | `towerInfoText` | TMP текст характеристик башни |
 | `upgradeButtonImage` | Image компонент кнопки апгрейда |
 | `affordableColor` | Зелёный цвет кнопки (default: #34B233) |
 | `unaffordableColor` | Красный цвет кнопки (default: #B23333) |
 
 ### Enemy (на вражеском префабе)
+
 | Поле | Что |
 |------|-----|
 | `health` | Здоровье врага |
 | `coinReward` | Награда за убийство |
 
 ### Tower (на префабе башни)
+
 | Поле | Что |
 |------|-----|
 | `stats` | TowerData ScriptableObject |
@@ -81,7 +123,30 @@ Scripts/
 | `projectilePrefab` | Префаб снаряда |
 | `firePoint` | Точка спавна снаряда |
 
-## Известные рекомендации (не критичные)
-- `WaypointFollower2D.Start()` использует `FindWithTag("GameController")` — заменить на сериализованную ссылку на `PathContainer`
-- `PathContainer` использует `OnEnable` — лучше `Awake`
-- `WaypointFollower2D` не уведомляет `BaseManager` когда враг дошёл до конца — враги просто уничтожаются
+---
+
+## Известные рекомендации
+
+| Приоритет | Файл | Проблема | Статус |
+|-----------|------|----------|--------|
+| Средний | `WaypointFollower2D` | `FindWithTag("GameController")` — заменить на сериализованную ссылку | ⏳ |
+| Низкий | `PathContainer` | `OnEnable` — лучше `Awake` | ⏳ |
+| Средний | `EnemySpawner` | Только бесконечный спавн — нужны волны | ⏳ В работе |
+| Низкий | `Tower.cs`, `Projectile.cs` | Комментарии на украинском — привести к русскому | ⏳ |
+
+---
+
+## Актуальные задачи
+
+### В разработке
+
+- [ ] **Волны** — основная задача от Марины
+- [ ] Причесать комментарии (единый язык — русский)
+
+### Публичный репозиторий
+
+Проект готовится к публикации как портфолио. Требуется:
+- [x] Почистить .gitignore
+- [x] Убрать мусорные файлы
+- [x] Создать AGENTS.md
+- [ ] Добавить README.md с описанием проекта
