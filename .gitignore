@@ -81,3 +81,6 @@ Renaissance/Packages/packages-lock.json
 # Local scripts (not part of the game)
 *.bat
 *.ps1
+
+# MiniMax Agent (AI assistant)
+.minimax/
