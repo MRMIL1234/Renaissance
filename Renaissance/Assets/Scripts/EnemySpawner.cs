@@ -1,6 +1,6 @@
 
 using System.Collections;
-using Unity.VisualScripting;
+using System.Dynamic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -10,6 +10,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float _timeBetweenWaves = 10f; // Time between waves of enemies
     [SerializeField] private float _waveTimer;
     [SerializeField] private int _waveCounter;
+    [SerializeField] private int rest = 3;
     [SerializeField] private int _totalWaves = 5; // Total number of waves to spawn
     [SerializeField] private int _maxEnemiesInWave = 3; // Maximum number of enemies to spawn in a wave
     [SerializeField] private int _currentEnemiesInWave = 0; // Current number of enemies spawned in the wave
@@ -17,6 +18,8 @@ public class EnemySpawner : MonoBehaviour
     [Header("Enemy Prefab and Spawn Position")]
     [SerializeField] private GameObject _enemyPrefab; // Reference to the enemy prefab
     [SerializeField] private Transform _spawnPlace; // Position where enemies will be spawned
+
+    GameObject[] enemies;
 
     public int WaveCounter
     {
@@ -30,15 +33,20 @@ public class EnemySpawner : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
         StartCoroutine(SpawnControllerRoutine());
     }
     private IEnumerator WaveRoutine()
     {
-        while (_currentEnemiesInWave < _maxEnemiesInWave)
+        if (enemies.Length == 0)
         {
-            Instantiate(_enemyPrefab, _spawnPlace.position, Quaternion.identity);
-            _currentEnemiesInWave++;
-            yield return new WaitForSeconds(_interval);
+            while (_currentEnemiesInWave < _maxEnemiesInWave)
+            {
+                Instantiate(_enemyPrefab, _spawnPlace.position, Quaternion.identity);
+                _currentEnemiesInWave++;
+                yield return new WaitForSeconds(_interval);
+                enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            }
         }
     }
     private IEnumerator SpawnControllerRoutine()
@@ -52,6 +60,12 @@ public class EnemySpawner : MonoBehaviour
             uiManager.ShowWaveTimer(false);
             yield return StartCoroutine(WaveRoutine());
 
+            while (enemies.Length > 0)
+            {
+                yield return null;
+                enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            }
+            yield return new WaitForSeconds(rest);
             // Показуємо таймер до наступної хвилі (окрім випадку, коли хвиля остання)
             bool isLastWave = (i == _totalWaves - 1);
             if (!isLastWave)
