@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MageData
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   towerName: Mage
-  sprite: {fileID: 4141920519377639142, guid: 431cb80c0b7d3324ca765fb32c3c9fd7, type: 3}
+  sprite: {fileID: 3396724877558623062, guid: 66dae4d9b0902bc46859a0eecd251b43, type: 3}
   baseCost: 150
   baseDamage: 30
   attackRadius: 3.5
@@ -22,3 +22,4 @@ MonoBehaviour:
   damageMultiplier: 1.3
   cooldownMultiplier: 0.9
   costMultiplier: 1.5
+  radiusMultiplier: 1.1
