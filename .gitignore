@@ -14,6 +14,7 @@ Renaissance/[Bb]uilds/
 Renaissance/[Ll]ogs/
 Renaissance/[Uu]ser[Ss]ettings/
 Renaissance/*.log
+Renaissance/_Recovery/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
