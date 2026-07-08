@@ -1,0 +1,75 @@
+# Unity-specific gitattributes
+# Auto-detect text files and normalize line endings
+
+# Unity generates meta files - treat them as text
+*.meta text
+
+# Scripts - always use LF
+*.cs text eol=lf
+*.shader text eol=lf
+*.compute text eol=lf
+*.cginc text eol=lf
+
+# Configs
+*.json text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.ini text eol=lf
+
+# Text assets
+*.txt text eol=lf
+*.md text eol=lf
+*.csv text eol=lf
+
+# Treat as binary (don't try to diff/merge)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.psd binary
+*.tga binary
+*.tif binary
+*.tiff binary
+*.exr binary
+*.hdr binary
+*.asset binary
+*.prefab binary
+*.mat binary
+*.physicMaterial binary
+*.controller binary
+*.anim binary
+*.overrideController binary
+*.avatar binary
+*.mask binary
+*.playable binary
+
+# Audio
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.aiff binary
+*.fsb binary
+
+# Video
+*.mp4 binary
+*.mov binary
+*.avi binary
+
+# Unity specific
+*.dll binary
+*.pdb binary
+*.mdb binary
+*.exd binary
+*.cache binary
+
+# Font files
+*.fontsettings binary
+*.fnt binary
+
+# Scene files (can be text but often large binary data)
+*.unity text eol=lf
+
+# Input actions (new Input System)
+*.inputactions text eol=lf
