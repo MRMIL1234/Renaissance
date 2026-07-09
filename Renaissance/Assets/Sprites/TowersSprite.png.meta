@@ -109,10 +109,10 @@ TextureImporter:
       name: TowersSprite_0
       rect:
         serializedVersion: 2
-        x: 29
-        y: 310
-        width: 306
-        height: 393
+        x: 30
+        y: 314
+        width: 299
+        height: 389
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,9 +132,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 357
-        y: 346
-        width: 313
-        height: 382
+        y: 348
+        width: 312
+        height: 379
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,9 +154,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 697
-        y: 304
+        y: 309
         width: 298
-        height: 398
+        height: 393
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
