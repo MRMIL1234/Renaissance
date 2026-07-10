@@ -1,6 +1,5 @@
 
 using System.Collections;
-using System.Dynamic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -19,7 +18,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private GameObject _enemyPrefab; // Reference to the enemy prefab
     [SerializeField] private Transform _spawnPlace; // Position where enemies will be spawned
 
-    GameObject[] enemies;
+    private int _activeEnemyCount;
 
     public int WaveCounter
     {
@@ -30,23 +29,29 @@ public class EnemySpawner : MonoBehaviour
             uiManager.ShowWave(_waveCounter); // Update the UI with the new wave count
         }
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        Enemy.OnEnemyDied += OnEnemyDied;
         StartCoroutine(SpawnControllerRoutine());
+    }
+
+    void OnDestroy()
+    {
+        Enemy.OnEnemyDied -= OnEnemyDied;
+    }
+
+    private void OnEnemyDied()
+    {
+        _activeEnemyCount--;
     }
     private IEnumerator WaveRoutine()
     {
-        if (enemies.Length == 0)
+        while (_currentEnemiesInWave < _maxEnemiesInWave)
         {
-            while (_currentEnemiesInWave < _maxEnemiesInWave)
-            {
-                Instantiate(_enemyPrefab, _spawnPlace.position, Quaternion.identity);
-                _currentEnemiesInWave++;
-                yield return new WaitForSeconds(_interval);
-                enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            }
+            Instantiate(_enemyPrefab, _spawnPlace.position, Quaternion.identity);
+            _currentEnemiesInWave++;
+            _activeEnemyCount++;
+            yield return new WaitForSeconds(_interval);
         }
     }
     private IEnumerator SpawnControllerRoutine()
@@ -60,10 +65,9 @@ public class EnemySpawner : MonoBehaviour
             uiManager.ShowWaveTimer(false);
             yield return StartCoroutine(WaveRoutine());
 
-            while (enemies.Length > 0)
+            while (_activeEnemyCount > 0)
             {
                 yield return null;
-                enemies = GameObject.FindGameObjectsWithTag("Enemy");
             }
             yield return new WaitForSeconds(rest);
             // Показуємо таймер до наступної хвилі (окрім випадку, коли хвиля остання)

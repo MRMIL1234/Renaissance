@@ -6,6 +6,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float health = 100f;
     [SerializeField] private int coinReward = 25;
 
+    public static event System.Action OnEnemyDied;
+
     private bool _isDead = false;
 
     public void TakeDamage(float damage)
@@ -28,8 +30,12 @@ public class Enemy : MonoBehaviour
             GameEconomy.Instance.AddCoins(coinReward);
         }
 
-        // Уведомляем BaseManager что враг дошёл (если на нём был BaseManager-триггер)
         Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        OnEnemyDied?.Invoke();
     }
 
     public float Health => health;
