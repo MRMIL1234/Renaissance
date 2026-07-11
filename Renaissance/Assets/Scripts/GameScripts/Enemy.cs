@@ -9,6 +9,19 @@ public class Enemy : MonoBehaviour
     public static event System.Action OnEnemyDied;
 
     private bool _isDead = false;
+    private float _maxHealth;
+
+    private void Awake()
+    {
+        _maxHealth = health;
+    }
+
+    public void SetStats(float newHealth, int newCoinReward)
+    {
+        health = newHealth;
+        _maxHealth = newHealth;
+        coinReward = newCoinReward;
+    }
 
     public void TakeDamage(float damage)
     {
@@ -39,5 +52,5 @@ public class Enemy : MonoBehaviour
     }
 
     public float Health => health;
-    public float MaxHealth => 100f; // можно вынести в поле если нужно
+    public float MaxHealth => _maxHealth;
 }

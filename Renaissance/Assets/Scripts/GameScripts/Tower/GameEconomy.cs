@@ -19,7 +19,7 @@ public class GameEconomy : MonoBehaviour
             coins = value;
             UpdateCoinsUI();
 
-            PlacementManager placementManager = Object.FindFirstObjectByType<PlacementManager>();
+            PlacementManager placementManager = Object.FindAnyObjectByType<PlacementManager>();
             if (placementManager != null)
             {
                 placementManager.RefreshUpgradeUIIfActive();

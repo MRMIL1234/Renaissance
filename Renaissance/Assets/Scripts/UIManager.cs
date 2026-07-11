@@ -12,6 +12,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _waveTimerText;
     [SerializeField] private GameObject _gameOverPanel;
 
+    [Header("Wave Timer")]
+    [SerializeField] private TextMeshProUGUI _waveActiveTimerText;
+    [SerializeField] private TextMeshProUGUI _restPhraseText;
+
+    private int _lastBaseHealth = 100;
+
+    private readonly string[] _highHpPhrases = { "GREAT!", "WELL", "ULTRA-wave", "AMAZING!", "PERFECT!" };
+    private readonly string[] _midHpPhrases = { "NICE", "GOOD", "KEEP IT UP" };
+    private readonly string[] _lowHpPhrases = { "Oh no", "Really?", "What?", "HOLD THE LINE!" };
+
     [Header("Upgrade Panel")]
     [SerializeField] private GameObject upgradePanel;
     [SerializeField] private TextMeshProUGUI upgradeCostText;
@@ -29,7 +39,7 @@ public class UIManager : MonoBehaviour
     {
          _hpSlider.value = health;
          _hpText.text = "HP: " + health;
-        
+         _lastBaseHealth = health;
     }
     public void ReloadGame()
     {
@@ -57,11 +67,50 @@ public class UIManager : MonoBehaviour
         _waveTimerText.gameObject.SetActive(show);
     }
 
-    public void UpdateWaveTimer(float timeLeft)
+    public void UpdateCountdownTimer(float timeLeft)
     {
         if (_waveTimerText == null) return;
-        int secondsLeft = Mathf.CeilToInt(Mathf.Max(timeLeft, 0f));
-        _waveTimerText.text = "Наступна хвиля через: " + secondsLeft + "с";
+        _waveTimerText.text = FormatTime(timeLeft);
+    }
+
+    public void ShowWaveActiveTimer(bool show)
+    {
+        if (_waveActiveTimerText != null)
+            _waveActiveTimerText.gameObject.SetActive(show);
+    }
+
+    public void UpdateWaveActiveTimer(float elapsed)
+    {
+        if (_waveActiveTimerText == null) return;
+        _waveActiveTimerText.text = FormatTime(elapsed);
+    }
+
+    public void ShowRandomRestPhrase()
+    {
+        if (_restPhraseText == null) return;
+
+        string[] pool;
+        if (_lastBaseHealth > 90)
+            pool = _highHpPhrases;
+        else if (_lastBaseHealth > 50)
+            pool = _midHpPhrases;
+        else
+            pool = _lowHpPhrases;
+
+        _restPhraseText.text = pool[Random.Range(0, pool.Length)];
+        _restPhraseText.gameObject.SetActive(true);
+    }
+
+    public void HideRestPhrase()
+    {
+        if (_restPhraseText == null) return;
+        _restPhraseText.gameObject.SetActive(false);
+    }
+
+    private string FormatTime(float seconds)
+    {
+        int sec = Mathf.CeilToInt(Mathf.Max(seconds, 0f));
+        return $"{sec / 60:D2}:{sec % 60:D2}";
     }
     // === UPGRADE PANEL ===
     public void OpenUpgradePanel(Tower tower)

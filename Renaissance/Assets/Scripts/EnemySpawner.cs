@@ -11,14 +11,18 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private int _waveCounter;
     [SerializeField] private int rest = 3;
     [SerializeField] private int _totalWaves = 5; // Total number of waves to spawn
-    [SerializeField] private int _maxEnemiesInWave = 3; // Maximum number of enemies to spawn in a wave
     [SerializeField] private int _currentEnemiesInWave = 0; // Current number of enemies spawned in the wave
+
+    [Header("Сложность")]
+    [SerializeField] private int _enemiesPerWaveBonus = 1; // +X врагов на каждую волну
+    [SerializeField] private float _extraHealthPerWave = 25f; // +X HP на каждую волну
 
     [Header("Enemy Prefab and Spawn Position")]
     [SerializeField] private GameObject _enemyPrefab; // Reference to the enemy prefab
     [SerializeField] private Transform _spawnPlace; // Position where enemies will be spawned
 
     private int _activeEnemyCount;
+    private float _waveStartTime;
 
     public int WaveCounter
     {
@@ -44,16 +48,6 @@ public class EnemySpawner : MonoBehaviour
     {
         _activeEnemyCount--;
     }
-    private IEnumerator WaveRoutine()
-    {
-        while (_currentEnemiesInWave < _maxEnemiesInWave)
-        {
-            Instantiate(_enemyPrefab, _spawnPlace.position, Quaternion.identity);
-            _currentEnemiesInWave++;
-            _activeEnemyCount++;
-            yield return new WaitForSeconds(_interval);
-        }
-    }
     private IEnumerator SpawnControllerRoutine()
     {
         for (int i = 0; i < _totalWaves; i++)
@@ -61,22 +55,65 @@ public class EnemySpawner : MonoBehaviour
             WaveCounter++;
             _currentEnemiesInWave = 0;
 
-            // Ховаємо таймер на час активного спавну хвилі
+            // === WAVE ACTIVE (спавн + бой) ===
+            _waveStartTime = Time.time;
             uiManager.ShowWaveTimer(false);
-            yield return StartCoroutine(WaveRoutine());
+            uiManager.ShowWaveActiveTimer(true);
+
+            int waveEnemyCount = 3 + i * _enemiesPerWaveBonus;
+            float enemyHealth = 100f + i * _extraHealthPerWave;
+            int enemyCoinReward = 25 + i * 5;
+
+            while (_currentEnemiesInWave < waveEnemyCount)
+            {
+                GameObject enemyObj = Instantiate(_enemyPrefab, _spawnPlace.position, Quaternion.identity);
+                Enemy enemy = enemyObj.GetComponent<Enemy>();
+                if (enemy != null)
+                    enemy.SetStats(enemyHealth, enemyCoinReward);
+
+                _currentEnemiesInWave++;
+                _activeEnemyCount++;
+
+                float spawnTimer = 0f;
+                while (spawnTimer < _interval)
+                {
+                    uiManager.UpdateWaveActiveTimer(Time.time - _waveStartTime);
+                    spawnTimer += Time.deltaTime;
+                    yield return null;
+                }
+            }
 
             while (_activeEnemyCount > 0)
             {
+                uiManager.UpdateWaveActiveTimer(Time.time - _waveStartTime);
                 yield return null;
             }
-            yield return new WaitForSeconds(rest);
-            // Показуємо таймер до наступної хвилі (окрім випадку, коли хвиля остання)
+
+            uiManager.ShowWaveActiveTimer(false);
+
+            // === REST (3 сек — мигающие фразы) ===
+            yield return StartCoroutine(RestRoutine());
+
+            // === COUNTDOWN (10 сек — 00:10 → 00:00) ===
             bool isLastWave = (i == _totalWaves - 1);
             if (!isLastWave)
             {
                 yield return StartCoroutine(WaveCountdownRoutine());
             }
         }
+    }
+
+    private IEnumerator RestRoutine()
+    {
+        float endTime = Time.time + rest;
+        while (Time.time < endTime)
+        {
+            uiManager.ShowRandomRestPhrase();
+            yield return new WaitForSeconds(Random.Range(0.35f, 0.65f));
+            uiManager.HideRestPhrase();
+            yield return new WaitForSeconds(Random.Range(0.15f, 0.35f));
+        }
+        uiManager.HideRestPhrase();
     }
 
     private IEnumerator WaveCountdownRoutine()
@@ -86,7 +123,7 @@ public class EnemySpawner : MonoBehaviour
 
         while (_waveTimer > 0f)
         {
-            uiManager.UpdateWaveTimer(_waveTimer);
+            uiManager.UpdateCountdownTimer(_waveTimer);
             yield return null;
             _waveTimer -= Time.deltaTime;
         }
