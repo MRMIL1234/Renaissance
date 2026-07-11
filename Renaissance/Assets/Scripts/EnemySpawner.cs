@@ -31,6 +31,11 @@ public class EnemySpawner : MonoBehaviour
         { 
             _waveCounter = value; 
             uiManager.ShowWave(_waveCounter); // Update the UI with the new wave count
+            if (_waveCounter > _totalWaves)
+            {
+                Time.timeScale = 0;
+                uiManager.ShowVictoryPanel(true);
+            }
         }
     }
     void Start()
@@ -90,6 +95,12 @@ public class EnemySpawner : MonoBehaviour
             }
 
             uiManager.ShowWaveActiveTimer(false);
+
+            if (_waveCounter == _totalWaves)
+            {
+                uiManager.ShowVictoryPanel(true);
+                yield break;  // выйти из корутины, не идти в rest
+            }
 
             // === REST (3 сек — мигающие фразы) ===
             yield return StartCoroutine(RestRoutine());

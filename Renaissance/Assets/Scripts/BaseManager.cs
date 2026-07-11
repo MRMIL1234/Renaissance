@@ -17,7 +17,7 @@ public class BaseManager : MonoBehaviour
                 uiManager.UpdateHP(_baseHealth);
                 GameOverState();
             }
-            else
+            else 
             {
                 _baseHealth = value;
                 uiManager.UpdateHP(_baseHealth);

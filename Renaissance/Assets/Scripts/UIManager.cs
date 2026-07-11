@@ -11,6 +11,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _waveText;
     [SerializeField] private TextMeshProUGUI _waveTimerText;
     [SerializeField] private GameObject _gameOverPanel;
+    [SerializeField] private GameObject _guidePanel;
+    [SerializeField] private GameObject _victoryPanel;
 
     [Header("Wave Timer")]
     [SerializeField] private TextMeshProUGUI _waveActiveTimerText;
@@ -31,9 +33,17 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        _gameOverPanel.SetActive(false);
+        if (_gameOverPanel != null)
+            _gameOverPanel.SetActive(false);
         if (upgradePanel != null)
             upgradePanel.SetActive(false);
+        if (_guidePanel != null)
+        {
+            Time.timeScale = 0;
+            _guidePanel.SetActive(true);
+        }
+            
+
     }
     public void UpdateHP(int health)
     {
@@ -152,6 +162,20 @@ public class UIManager : MonoBehaviour
                 OpenUpgradePanel(currentTower);
             }
         }
+    }
+    public void HideGuide()
+    {
+        if (_guidePanel != null)
+        {
+            _guidePanel.SetActive(false);
+            Time.timeScale = 1;
+        }
+    }
+    public void ShowVictoryPanel(bool show)
+    {
+        _victoryPanel.SetActive(show);
+        if (show)
+            Time.timeScale = 0;
     }
 }
  
