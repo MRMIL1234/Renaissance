@@ -1,19 +1,10 @@
 fileFormatVersion: 2
-guid: 8d1e8bff8b76b8641a36c64ac65d1a48
+guid: 96541e012bea82c4883ee016af7ad1ba
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7432844144301801400
-    second: ShopPanel_0
-  - first:
-      213: -548038576150251398
-    second: ShopPanel_1
-  - first:
-      213: 2467915620610164150
-    second: ShopPanel_2
-  - first:
-      213: 1855269311437407135
-    second: ShopPanel_3
+      213: -3323550289218893184
+    second: Spri_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -60,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 200
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -84,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -109,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ShopPanel_0
+      name: Spri_0
       rect:
         serializedVersion: 2
-        x: 27
-        y: 299
-        width: 1341
-        height: 330
+        x: 47
+        y: 87
+        width: 186
+        height: 98
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,74 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8bf73fb4e54c62760800000000000000
-      internalID: 7432844144301801400
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ShopPanel_1
-      rect:
-        serializedVersion: 2
-        x: 52
-        y: 76
-        width: 306
-        height: 195
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a787a5191d9f468f0800000000000000
-      internalID: -548038576150251398
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ShopPanel_2
-      rect:
-        serializedVersion: 2
-        x: 374
-        y: 71
-        width: 306
-        height: 195
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6b54b1e6e2ccf3220800000000000000
-      internalID: 2467915620610164150
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ShopPanel_3
-      rect:
-        serializedVersion: 2
-        x: 722
-        y: 64
-        width: 306
-        height: 195
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f9309eeeb9d3fb910800000000000000
-      internalID: 1855269311437407135
+      spriteID: 08a06f1fe9060e1d0800000000000000
+      internalID: -3323550289218893184
       vertices: []
       indices: 
       edges: []
@@ -210,10 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ShopPanel_0: 7432844144301801400
-      ShopPanel_1: -548038576150251398
-      ShopPanel_2: 2467915620610164150
-      ShopPanel_3: 1855269311437407135
+      Spri_0: -3323550289218893184
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
