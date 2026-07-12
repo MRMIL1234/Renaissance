@@ -16,6 +16,7 @@ Renaissance/[Uu]ser[Ss]ettings/
 Renaissance/*.log
 Renaissance/_Recovery/
 
+MRMIL.md
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 Renaissance/[Mm]emoryCaptures/
