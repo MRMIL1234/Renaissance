@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+    
 
 public class UIManager : MonoBehaviour
 {
@@ -29,10 +30,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI upgradeCostText;
     [SerializeField] private TextMeshProUGUI damageText;
     [SerializeField] private TextMeshProUGUI levelText;
+
+
     private Tower currentTower;
 
     void Start()
-    {
+    {        if (_victoryPanel != null) 
+            _victoryPanel.SetActive(false);
         if (_gameOverPanel != null)
             _gameOverPanel.SetActive(false);
         if (upgradePanel != null)
@@ -177,5 +181,7 @@ public class UIManager : MonoBehaviour
         if (show)
             Time.timeScale = 0;
     }
+    
+
 }
  

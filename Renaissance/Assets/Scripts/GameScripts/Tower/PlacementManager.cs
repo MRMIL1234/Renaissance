@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class PlacementManager : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class PlacementManager : MonoBehaviour
     private GameObject ghostTower;
     private Tower selectedTower;
     private Transform activeRangeIndicator;
+    private Coroutine _feedbackCoroutine;
 
     private void Start()
     {
@@ -86,7 +88,7 @@ public class PlacementManager : MonoBehaviour
 
         if (!GameEconomy.Instance.CanAfford(towerScript.Stats.BaseCost))
         {
-            Debug.Log("Замало монет!");
+            ShowFeedback("Not enough coins!");
             return;
         }
 
@@ -127,7 +129,7 @@ public class PlacementManager : MonoBehaviour
         {
             if (groundHit.gameObject.layer == LayerMask.NameToLayer("Road"))
             {
-                Debug.Log("Здесь дорога!");
+                ShowFeedback("You can't place tower on roads!");
                 CancelPlacement();
                 return;
             }
@@ -146,8 +148,7 @@ public class PlacementManager : MonoBehaviour
                 return;
             }
         }
-        // Ни земли, ни дороги - просто отменяем
-        Debug.Log("Здесь нельзя строить!");
+        ShowFeedback("Can't place here!");
         CancelPlacement();
     }
 
@@ -212,8 +213,7 @@ public class PlacementManager : MonoBehaviour
         if (upgradeButton != null)
             upgradeButton.interactable = canAfford;
 
-        if (feedbackText != null)
-            feedbackText.text = "";
+        
 
         if (activeRangeIndicator != null)
         {
@@ -238,13 +238,27 @@ public class PlacementManager : MonoBehaviour
         {
             GameEconomy.Instance.SpendCoins(selectedTower.CurrentUpgradeCost);
             selectedTower.UpgradeTower();
-            if (feedbackText != null) feedbackText.text = "";
+            ShowFeedback("Success upgrade!");
             UpdateUpgradeUI();
         }
         else
         {
-            if (feedbackText != null) feedbackText.text = "Not enough coins!";
+            ShowFeedback("Not enough coins!");
         }
+    }
+
+    private void ShowFeedback(string message, float duration = 3f)
+    {
+        if (_feedbackCoroutine != null) StopCoroutine(_feedbackCoroutine);
+        _feedbackCoroutine = StartCoroutine(FeedbackRoutine(message, duration));
+    }
+
+    private IEnumerator FeedbackRoutine(string message, float duration)
+    {
+        if (feedbackText != null) feedbackText.text = message;
+        yield return new WaitForSeconds(duration);
+        if (feedbackText != null) feedbackText.text = "";
+        _feedbackCoroutine = null;
     }
 
     private void CancelPlacement()
