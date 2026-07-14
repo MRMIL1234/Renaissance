@@ -156,7 +156,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
-  projectilePrefab: {fileID: 3278742472359252028, guid: b73fb127b4a5a2147a4d04fd2c4663d6, type: 3}
+  projectilePrefab: {fileID: 3278742472359252028, guid: fa35a9547f472144b86879c0f05e35b2, type: 3}
   firePoint: {fileID: 0}
 --- !u!1 &5568053530633865080
 GameObject:
