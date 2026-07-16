@@ -44,3 +44,7 @@ Open in Unity 6000.4.10f1 → `File → Build Settings → Build`.
 - TextMeshPro
 - Universal Render Pipeline (URP)
 - C# / ScriptableObjects
+
+## License
+- Code: APGL-3.0 license
+- Art assets are CC BY-NC-SA 4.0
