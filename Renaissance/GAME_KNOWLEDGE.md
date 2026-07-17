@@ -149,4 +149,80 @@ Scripts/
 - [x] Почистить .gitignore
 - [x] Убрать мусорные файлы
 - [x] Создать AGENTS.md
-- [ ] Добавить README.md с описанием проекта
+- [x] Добавить README.md с описанием проекта
+
+---
+
+## Шпаргалки (16.07.2026)
+
+### Blend Tree для 4-направленной анимации
+
+**Что:** Одно состояние аниматора, которое переключает клипы по двум float-параметрам (MoveX, MoveY).
+
+**Когда использовать:** Когда персонаж двигается в 4 стороны и нужны разные анимации для каждой.
+
+**Настройка:**
+1. Параметры аниматора: MoveX (float), MoveY (float), IsMoving (bool)
+2. Создать Blend Tree (2D Simple Directional)
+3. 4 motion с координатами:
+   - Right: (1, 0)
+   - Left: (-1, 0)
+   - Up: (0, 1)
+   - Down: (0, -1)
+4. Entry → Run (без условий)
+
+**Код (WaypointFollower2D.cs):**
+```csharp
+Vector2 dir = (target - transform.position).normalized;
+if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
+{
+    anim.SetFloat("MoveX", dir.x > 0 ? 1 : -1);
+    anim.SetFloat("MoveY", 0);
+}
+else
+{
+    anim.SetFloat("MoveX", 0);
+    anim.SetFloat("MoveY", dir.y > 0 ? 1 : -1);
+}
+anim.SetBool("IsMoving", true);
+```
+
+**Важно:**
+- Loop Time должен быть включён на каждом .anim файле (иначе анимация проиграется 1 раз и встанет)
+- Blend Tree = 0 транзишенов → 0 задержки
+- Mathf.Abs(x) = модуль числа (расстояние от нуля)
+
+### Mathf.Abs (модуль числа)
+
+| x | Mathf.Abs(x) |
+|---|-------------|
+| 5 | 5 |
+| -3 | 3 |
+| 0 | 0 |
+
+Используется чтобы понять: движение больше по горизонтали (`AbsX > AbsY`) или по вертикали.
+
+### ShowFeedback (корутина)
+
+Автоматическое скрытие сообщения через N секунд:
+```csharp
+private Coroutine _feedbackCoroutine;
+
+private void ShowFeedback(string msg, float duration = 3f)
+{
+    if (_feedbackCoroutine != null) StopCoroutine(_feedbackCoroutine);
+    _feedbackCoroutine = StartCoroutine(FeedbackRoutine(msg, duration));
+}
+
+private IEnumerator FeedbackRoutine(string msg, float duration)
+{
+    feedbackText.text = msg;
+    yield return new WaitForSeconds(duration);
+    feedbackText.text = "";
+}
+```
+
+### Почему игнорировать транзишены в аниматоре = лучше
+- Каждый Any State → State транзишен создаёт задержку 1-2 кадра
+- 4 состояния × 3 транзишена = 12 задержкоопасных мест
+- Blend Tree решает это полностью

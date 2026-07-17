@@ -182,7 +182,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaypointFollower2D
   _speed: 1.5
-  _arrivalDistance: 0.1
+  _arrivalDistance: 0.5
+  _animator: {fileID: -3810091626176554900}
 --- !u!114 &-7592249257801286916
 MonoBehaviour:
   m_ObjectHideFlags: 0
